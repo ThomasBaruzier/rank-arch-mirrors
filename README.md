@@ -2,7 +2,7 @@
 
 A bash script to find the best mirrors
 
-<br><img src="https://github.com/user-attachments/assets/86d0bb0b-e120-4062-8b11-aa1ef3364488" width="720"><br><br>
+<br><img src="https://github.com/user-attachments/assets/86d0bb0b-e120-4062-8b11-aa1ef3364488" width="720"><br>
 
 ### Features
 
@@ -11,8 +11,6 @@ A bash script to find the best mirrors
 - Multithreaded queries for latency checks
 - See download speed, latency, and a combined score
 - Backs up the current mirrorlist and asks for confirmation first
-
-<br>
 
 ### Get Started  
 
@@ -24,8 +22,6 @@ A bash script to find the best mirrors
    ```
 
 2. When done, the script will display its findings. Enter 'y' to apply the new mirrorlist.
-
-<br>
 
 ### To Know  
 - Requires `curl`, `grep`, `sed`, `awk`, `pacman`.  
