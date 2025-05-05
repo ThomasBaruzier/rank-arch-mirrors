@@ -5,11 +5,11 @@ This script hunts down the fastest mirrors tailored to your connection by testin
 ---
 
 ### Why another mirror raking tool?
-- Two-stage testing: First filters mirrors by latency, then stress-tests the fastest candidates with real packages.
-- ArchLinux and ArchLinuxArm support: Works on both x86_64 and ARM devices.
-- Tuned for speed: Multithreaded queries for latency testing.
-- Transparent results: See download speed, latency, and a combined score before applying changes.
-- Safety first: Backs up your existing mirrorlist and asks for confirmation before making changes.
+- Two-stage testing: Latency + download speed
+- ArchLinux and ArchLinuxArm support
+- Multithreaded queries for latency checks
+- See download speed, latency, and a combined score before applying changes
+- Backs up the current mirrorlist and asks for confirmation before making changes
 
 ---
 
@@ -25,16 +25,6 @@ This script hunts down the fastest mirrors tailored to your connection by testin
 
 ---
 
-### Things to Know  
+### To Know  
 - Requires `curl`, `grep`, `sed`, `awk`, `pacman`.  
 - Your original mirrorlist is backed up to `/etc/pacman.d/mirrorlist.bkp`.  
-
----
-
-### If Something Breaks  
-- "No mirrors available": Check your internet or open an issue 
-- Permission errors: Run with `sudo` if the script struggles to write to `/etc/pacman.d/`.  
-
----
-
-*Made for Arch users, by someone who hates waiting for packages to download.*
