@@ -8,8 +8,8 @@ This script hunts down the fastest mirrors tailored to your connection by testin
 - Two-stage testing: Latency + download speed
 - ArchLinux and ArchLinuxArm support
 - Multithreaded queries for latency checks
-- See download speed, latency, and a combined score before applying changes
-- Backs up the current mirrorlist and asks for confirmation before making changes
+- See download speed, latency, and a combined score
+- Backs up the current mirrorlist and asks for confirmation
 
 ---
 
