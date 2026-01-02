@@ -6,7 +6,7 @@ config() {
   results_limit=10
 
   threads="${1:-32}"
-  test_package='systemd'
+  test_package='pacman'
 
   mirror_path='/etc/pacman.d/mirrorlist'
   mirror_cache="$HOME/.cache/mirrorlist_cache"
@@ -29,6 +29,7 @@ init() {
   TIMEFORMAT='%3R'
   trap 'cleanup' EXIT
 
+  detect_distro
   determine_repo_urls
   determine_package_url
 }
@@ -42,28 +43,43 @@ cleanup() {
   exit "${1:-0}"
 }
 
-determine_repo_urls() {
-  arch=$(uname -m)
+detect_distro() {
+  if [ -f /etc/os-release ]; then
+    source /etc/os-release
+    distro_id="$ID"
+  else
+    distro_id="unknown"
+  fi
+}
 
-  if [ "$arch" = 'x86_64' ]; then
-    arch_url="core/os/$arch"
+determine_repo_urls() {
+  if [ "$distro_id" = "artix" ]; then
+    repo_name="system"
+    arch_url="$repo_name/os/$arch"
+    arch_url_src='$repo/os/$arch'
+    mirrors_url='https://packages.artixlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4'
+    geoip_url="http://mirrors.gigenet.com/artixlinux/$arch_url"
+  elif [ "$arch" = 'x86_64' ]; then
+    repo_name="core"
+    arch_url="$repo_name/os/$arch"
     arch_url_src='$repo/os/$arch'
     mirrors_url='https://archlinux.org/mirrorlist/all/'
     geoip_url="http://geo.mirror.pkgbuild.com/$arch_url"
   elif [ "$arch" = 'aarch64' ] || [ "$arch" = 'armv7l' ]; then
-    arch_url="$arch/core"
+    repo_name="core"
+    arch_url="$arch/$repo_name"
     arch_url_src='$arch/$repo'
     mirrors_url='https://raw.githubusercontent.com/archlinuxarm/PKGBUILDs/master/core/pacman-mirrorlist/mirrorlist'
     geoip_url="http://mirror.archlinuxarm.org/$arch_url"
   else
-    echo 'Unsupported arch'
+    echo 'Unsupported architecture or distribution'
     exit 1
   fi
 }
 
 determine_package_url() {
   local package_info=$(
-    curl -sL -m 5 "$geoip_url" |
+    curl -sL -m 5 "$geoip_url/" |
     grep -P "${test_package}-[0-9.-]+-${arch}.pkg.tar.[a-z]+(?=\">)"
   )
 
@@ -72,7 +88,7 @@ determine_package_url() {
   package_url="${package_info#*\"}"
   package_url="${package_url%\"*}"
 
-  [ -z "$package_url" ] && echo 'No connection' && exit 1
+  [ -z "$package_url" ] && echo 'No connection to reference mirror' && exit 1
 }
 
 worker_thread() {
@@ -119,12 +135,12 @@ urls_test() {
 perform_pass1() {
   mapfile -t pass1_urls < <(
     curl -sL "$mirrors_url" | grep -Po '#? *Server *= *\K.+' |
-    sed "s:\$arch:$arch:; s:\$repo:core:" |
+    sed "s:\$arch:$arch:; s:\$repo:$repo_name:" |
     grep -vF "//${geoip_url#*\/\/}" | head -n "$pass1_limit"
   )
 
   echo -e "\n\e[34mLatency test of ${#pass1_urls[@]} mirrors...\e[0m"
-  urls_test 'core.db' "${pass1_urls[@]}"
+  urls_test "${repo_name}.db" "${pass1_urls[@]}"
   check_empty "$mirror_cache"
 }
 
