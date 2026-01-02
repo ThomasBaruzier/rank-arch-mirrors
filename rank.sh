@@ -57,8 +57,8 @@ determine_repo_urls() {
     repo_name="system"
     arch_url="$repo_name/os/$arch"
     arch_url_src='$repo/os/$arch'
-    mirrors_url='https://packages.artixlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4'
-    geoip_url="http://mirrors.gigenet.com/artixlinux/$arch_url"
+    mirrors_url='https://packages.artixlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4'
+    geoip_url="https://mirrors.rit.edu/artixlinux/$arch_url"
   elif [ "$arch" = 'x86_64' ]; then
     repo_name="core"
     arch_url="$repo_name/os/$arch"
@@ -80,7 +80,8 @@ determine_repo_urls() {
 determine_package_url() {
   local package_info=$(
     curl -sL -m 5 "$geoip_url/" |
-    grep -P "${test_package}-[0-9.-]+-${arch}.pkg.tar.[a-z]+(?=\">)"
+    grep -oP "${test_package}-[a-zA-Z0-9._-]+-${arch}.pkg.tar.[a-z]+(?=\">)" |
+    head -n 1
   )
 
   package_size="${package_info##* }"
