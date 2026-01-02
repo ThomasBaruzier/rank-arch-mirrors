@@ -7,7 +7,7 @@ A bash script to find the best mirrors
 ### Features
 
 - Two-stage testing: Latency + download speed
-- ArchLinux and ArchLinuxArm support
+- ArchLinux, ArchLinuxArm, Artix Linux support
 - Multithreaded queries for latency checks
 - See download speed, latency, and a combined score
 - Backs up the current mirrorlist and asks for confirmation first
