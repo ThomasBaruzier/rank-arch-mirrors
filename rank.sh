@@ -89,13 +89,14 @@ determine_package_url() {
   package_size=$(
     curl -sI -L "$geoip_url/$filename" | 
     grep -i Content-Length | 
+    tail -n 1 |
     awk '{print $2}' | 
-    tr -d '\r'
+    tr -d '\r\n'
   )
 
   package_url="$filename"
 
-  if [ -z "$package_size" ]; then 
+  if [ -z "$package_size" ] || [ "$package_size" -eq 0 ]; then 
     echo 'Failed to determine package size from reference mirror' 
     exit 1
   fi
