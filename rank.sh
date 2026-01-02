@@ -78,18 +78,27 @@ determine_repo_urls() {
 }
 
 determine_package_url() {
-  local package_info=$(
+  local filename=$(
     curl -sL -m 5 "$geoip_url/" |
     grep -oP "${test_package}-[a-zA-Z0-9._-]+-${arch}.pkg.tar.[a-z]+(?=\">)" |
     head -n 1
   )
 
-  package_size="${package_info##* }"
-  package_size="${package_size//[^0-9]}"
-  package_url="${package_info#*\"}"
-  package_url="${package_url%\"*}"
+  [ -z "$filename" ] && echo 'No connection to reference mirror' && exit 1
 
-  [ -z "$package_url" ] && echo 'No connection to reference mirror' && exit 1
+  package_size=$(
+    curl -sI -L "$geoip_url/$filename" | 
+    grep -i Content-Length | 
+    awk '{print $2}' | 
+    tr -d '\r'
+  )
+
+  package_url="$filename"
+
+  if [ -z "$package_size" ]; then 
+    echo 'Failed to determine package size from reference mirror' 
+    exit 1
+  fi
 }
 
 worker_thread() {
