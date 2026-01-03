@@ -1,4 +1,4 @@
-# Rank Arch Mirrors
+# Mirrors
 
 A bash script to find the best mirrors
 
