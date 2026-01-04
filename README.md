@@ -16,9 +16,7 @@ A bash script to find the best mirrors
 
 1. Download and run:
    ```bash  
-   curl -O https://raw.githubusercontent.com/ThomasBaruzier/rank-arch-mirrors/refs/heads/main/rank.sh
-   chmod +x rank.sh
-   ./rank.sh
+   curl -O https://raw.githubusercontent.com/ThomasBaruzier/rank-arch-mirrors/refs/heads/main/rank.sh && chmod +x rank.sh && ./rank.sh && rm rank.sh
    ```
 
 2. When done, the script will display its findings. Enter 'y' to apply the new mirrorlist.
