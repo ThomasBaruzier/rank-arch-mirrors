@@ -22,5 +22,5 @@ A bash script to find the best mirrors
 2. When done, the script will display its findings. Enter 'y' to apply the new mirrorlist.
 
 ### To Know  
-- Requires `curl`, `grep`, `sed`, `awk`, `pacman`.  
+- Requires `curl`, `grep`, `sed`, `awk`, `pacman`, `bc`.  
 - Your original mirrorlist is backed up to `/etc/pacman.d/mirrorlist.bkp`.  
